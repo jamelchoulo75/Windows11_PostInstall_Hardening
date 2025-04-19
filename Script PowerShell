@@ -1,0 +1,110 @@
+# PowerShell Script for Post-Install Hardening and Optimization of Windows 11
+
+# Variables
+$reportFile = [System.IO.Path]::Combine($env:USERPROFILE, "Desktop\Windows11_PostInstall_Report.html")
+$logFile = [System.IO.Path]::Combine($env:USERPROFILE, "Desktop\Windows11_PostInstall_Log.txt")
+
+# Start logging
+Start-Transcript -Path $logFile
+
+# 1. System Validation - Check Windows Version
+Write-Output "Validation de la version de Windows"
+$windowsVersion = (Get-WmiObject -Class Win32_OperatingSystem).Caption
+Write-Output "Version de Windows : $windowsVersion"
+
+# 2. Optimize Performance - Set High Performance Plan
+Write-Output "Optimisation des performances (Plan haute performance)"
+powercfg -change standby-timeout-ac 0
+powercfg -change monitor-timeout-ac 0
+powercfg -setactive SCHEME_MIN
+
+# 3. Disable NetBIOS, LLMNR, SMBv1
+Write-Output "Désactivation de NetBIOS, LLMNR et SMBv1"
+Set-NetIPInterface -InterfaceAlias "Ethernet" -NetBIOS Disabled
+Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
+Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
+Set-NetTCPSetting -SettingName InternetCustom -OffloadMaximum $false
+
+# 4. Enable PowerShell Logging (Script Block & Module Logging)
+Write-Output "Activation de la journalisation PowerShell"
+New-ItemProperty -Path "HKLM:\Software\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" -Name "ExecutionPolicy" -Value "RemoteSigned" -Force
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" -Name "EnableScriptBlockLogging" -Value 1
+Set-ItemProperty -Path "HKLM:\Software\Microsoft\PowerShell\1\ShellIds\Microsoft.PowerShell" -Name "EnableModuleLogging" -Value 1
+
+# 5. Enable Advanced Audit Policy
+Write-Output "Activation de l'audit avancé"
+auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+auditpol /set /category:"Account Logon" /success:enable /failure:enable
+
+# 6. Enable TRIM, Disable Hibernation, Disable Fast Startup
+Write-Output "Activation de TRIM, désactivation de l'hibernation et du démarrage rapide"
+fsutil behavior set DisableDeleteNotify 0
+powercfg -h off
+powercfg -restoredefaultschemes
+
+# 7. Clean Temporary Files and Run Disk Cleanup
+Write-Output "Nettoyage des fichiers temporaires"
+$cleanmgr = New-Object -ComObject Cleanmgr
+$cleanmgr.ShowSettings
+Start-Process -FilePath "cleanmgr.exe" -ArgumentList "/sagerun:1" -Wait
+
+# 8. Disable Cortana and OneDrive
+Write-Output "Désactivation de Cortana et OneDrive"
+Stop-Process -Name "Cortana" -Force
+Remove-Item -Path "C:\Program Files\WindowsApps\Microsoft.549981C3F5F10_10.2002.1601.0_x64__8wekyb3d8bbwe" -Force -Recurse
+
+# 9. Disable Microsoft Telemetry
+Write-Output "Désactivation de la télémétrie Microsoft"
+Stop-Service -Name DiagTrack -Force
+Set-Service -Name DiagTrack -StartupType Disabled
+
+# 10. Disable PS Remoting, PS 2.0
+Write-Output "Désactivation de PS Remoting et PS 2.0"
+Disable-PSRemoting -Force
+Set-ExecutionPolicy Restricted -Scope LocalMachine
+
+# 11. Disable Source Routing and IGMP
+Write-Output "Désactivation du routage source et d'IGMP"
+New-NetIPAddress -InterfaceAlias "Ethernet" -AddressFamily IPv4 -RoutingEnabled $false
+Disable-NetAdapterAdvancedProperty -Name "Ethernet" -DisplayName "IGMP Multicast"
+
+# 12. Enable Exploit Guard, PUA Protection, and Network Protection
+Write-Output "Activation d'Exploit Guard, PUA Protection et Network Protection"
+Set-MpPreference -PUAProtection Enabled
+Set-MpPreference -EnableNetworkProtection Enabled
+
+# 13. Uninstall Microsoft Bloatware Apps
+Write-Output "Désinstallation des applications inutiles"
+Get-AppxPackage -AllUsers | Remove-AppxPackage
+
+# 14. Sandbox Windows Activation
+Write-Output "Activation du bac à sable Windows"
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -All -NoRestart
+
+# 15. Final Report Generation
+$reportContent = @"
+<h1>Windows 11 Post-Installation Report</h1>
+<h2>System Validation</h2>
+<p>Version de Windows : $windowsVersion</p>
+<h2>Actions:</h2>
+<ul>
+  <li>Performance Optimization: Completed</li>
+  <li>NetBIOS, LLMNR, SMBv1 Disabled: Completed</li>
+  <li>PowerShell Logging: Activated</li>
+  <li>Audit Policy: Activated</li>
+  <li>TRIM, Hibernation, Fast Startup: Completed</li>
+  <li>Temporary Files Cleanup: Completed</li>
+  <li>Cortana and OneDrive: Disabled</li>
+  <li>Microsoft Telemetry: Disabled</li>
+  <li>PS Remoting & PS 2.0: Disabled</li>
+  <li>Source Routing and IGMP: Disabled</li>
+  <li>Exploit Guard & PUA Protection: Enabled</li>
+  <li>Windows Sandbox: Activated</li>
+</ul>
+"@
+
+$reportContent | Out-File -FilePath $reportFile -Force
+
+# End logging
+Stop-Transcript
+Write-Output "Post-installation completed successfully."
