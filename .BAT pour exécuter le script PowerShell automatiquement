@@ -1,4 +1,3 @@
 @echo off
-:: Execute PowerShell script for post-installation hardening
-powershell -ExecutionPolicy Bypass -File "C:\Path\To\Your\Windows11_PostInstall_Hardening.ps1"
+powershell -ExecutionPolicy Bypass -File "C:\Users\%USERNAME%\Desktop\Windows11_PostInstall_Hardening_v2.ps1"
 pause
