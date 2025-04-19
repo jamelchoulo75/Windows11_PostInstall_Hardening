@@ -1,30 +1,62 @@
-# Windows11_PostInstall_Hardening
+Windows 11 - Script d'Optimisation et de Sécurisation
 
-Post-Installation Hardening Script for Windows 11
-Version: 1.0
-Created by: Mous
+Description
 
-Overview:
-This script will perform various post-installation hardening tasks on Windows 11, including optimization, driver installation, cleanup, hardening, and security configurations. It also disables unnecessary services and applications, as well as applies hardening settings recommended by CIS and ANSSI benchmarks.
+Ce script PowerShell permet une optimisation rapide et basique ainsi qu'une sécurisation initiale d'un poste de travail Windows 11, en s'appuyant sur les meilleures pratiques de sécurité informatique issues des recommandations du CISA Benchmark et de l'ANSSI.
 
-Instructions:
-1. Copy the PowerShell script (Windows11_PostInstall_Hardening.ps1) and the batch file (Run_PostInstall.bat) to the same folder on your system.
-2. Double-click on the batch file (Run_PostInstall.bat) to execute the PowerShell script automatically.
-3. The script will perform the following actions:
-   - Validate system state
-   - Optimize performance
-   - Install necessary drivers
-   - Clean up temporary files
-   - Perform hardening actions (disabling SMBv1, NetBIOS, etc.)
-   - Enable security features like Exploit Guard, Network Protection, etc.
-   - Uninstall bloatware like OneDrive and Cortana
-   - Generate a report on the actions taken (saved as a .html file on the desktop)
-4. A log file will be created on the desktop to track actions performed by the script.
+Il effectue notamment :
 
-Important:
-- Make sure to run the batch file with administrator privileges.
-- This script is intended for use on Windows 11 systems only.
-- Do not interrupt the script during execution.
+L'optimisation des paramètres système (hibernation, alimentation, etc.).
 
-Disclaimer:
-This script is shared for educational and personal use. Always ensure to back up your system before running any scripts.
+L'activation de plusieurs fonctionnalités de sécurité natives.
+
+La désactivation de protocoles réseau obsolètes (NetBIOS, LLMNR).
+
+L'activation du Pare-feu Windows et de Windows Defender avec une journalisation étendue.
+
+L'activation de Windows Defender SmartScreen.
+
+La désinstallation automatique d'applications inutiles préinstallées (Xbox, Skype, Solitaire, etc.).
+
+La désactivation de tâches planifiées inutiles (OneDrive, Cortana, etc.).
+
+Prérequis
+
+Windows 11
+
+Exécuter le script en tant qu'administrateur
+
+Assurez-vous que l'exécution des scripts PowerShell soit autorisée temporairement (voir ci-dessous)
+
+Utilisation
+
+Téléchargement : Téléchargez le script Windows11_PostInstall_Hardening_v2.ps1 et le fichier launch_script.bat.
+
+Exécution : Cliquez droit sur le fichier launch_script.bat et sélectionnez « Exécuter en tant qu'administrateur ».
+
+Alternativement, ouvrez une invite PowerShell en tant qu'administrateur et exécutez :
+
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+.\Windows11_PostInstall_Hardening_v2.ps1
+
+Consultation des logs : Deux fichiers de log seront créés sur votre bureau pour le suivi des opérations effectuées :
+
+PostInstallationLog.txt
+
+resultat_final.txt
+
+Remarques Importantes
+
+Ce script est minimaliste et destiné principalement à une audience cherchant une solution rapide d'optimisation et de sécurisation de base.
+
+Il n'est pas exhaustif : des configurations supplémentaires peuvent être nécessaires selon votre environnement.
+
+Testez toujours ce type de script sur un poste de test avant de l'utiliser en production.
+
+Auteur
+
+Mous
+
+Licence
+
+Ce script est distribué librement. Vous êtes libre de l'utiliser, le modifier et le redistribuer, tout en respectant les bonnes pratiques de créditation.+
