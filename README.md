@@ -1,62 +1,80 @@
-Windows 11 - Script d'Optimisation et de Sécurisation
+Windows 11 - Post-Install PowerShell Hardening Script
 
-Description
+🔒 Objectif
 
-Ce script PowerShell permet une optimisation rapide et basique ainsi qu'une sécurisation initiale d'un poste de travail Windows 11, en s'appuyant sur les meilleures pratiques de sécurité informatique issues des recommandations du CISA Benchmark et de l'ANSSI.
+Un script PowerShell simple et efficace pour optimiser et sécuriser un poste Windows 11 après installation. Il applique des configurations essentielles inspirées des recommandations de l’ANSSI et du CIS Benchmark, tout en supprimant les logiciels inutiles souvent préinstallés.
 
-Il effectue notamment :
+Ce projet ne vise pas l’exhaustivité. Il fournit une base saine et accessible, que chacun peut ensuite adapter selon ses besoins et son niveau d’exigence.
 
-L'optimisation des paramètres système (hibernation, alimentation, etc.).
+📦 Contenu du dépôt
 
-L'activation de plusieurs fonctionnalités de sécurité natives.
+Windows11_PostInstall_Hardening_v2.ps1 — Le script principal à exécuter.
 
-La désactivation de protocoles réseau obsolètes (NetBIOS, LLMNR).
+launch_script.bat — Permet de lancer le script PowerShell en un double-clic.
 
-L'activation du Pare-feu Windows et de Windows Defender avec une journalisation étendue.
+PostInstallationLog.txt — Log détaillé généré automatiquement.
 
-L'activation de Windows Defender SmartScreen.
+resultat_final.txt — Résumé synthétique des actions appliquées.
 
-La désinstallation automatique d'applications inutiles préinstallées (Xbox, Skype, Solitaire, etc.).
+README.md — Ce fichier d’explication.
 
-La désactivation de tâches planifiées inutiles (OneDrive, Cortana, etc.).
+⚙️ Ce que fait le script
 
-Prérequis
+🔧 Optimisation système
 
-Windows 11
+Désactivation de l’hibernation et du démarrage rapide
 
-Exécuter le script en tant qu'administrateur
+Passage au mode d’alimentation haute performance
 
-Assurez-vous que l'exécution des scripts PowerShell soit autorisée temporairement (voir ci-dessous)
+Nettoyage des tâches planifiées inutiles (OneDrive, Cortana, Skype...)
 
-Utilisation
+🔐 Sécurisation
 
-Téléchargement : Téléchargez le script Windows11_PostInstall_Hardening_v2.ps1 et le fichier launch_script.bat.
+Activation de Defender, pare-feu Windows, SmartScreen, UAC renforcé
 
-Exécution : Cliquez droit sur le fichier launch_script.bat et sélectionnez « Exécuter en tant qu'administrateur ».
+Désactivation de protocoles obsolètes : NetBIOS, LLMNR, SMBv1, PowerShell v2
 
-Alternativement, ouvrez une invite PowerShell en tant qu'administrateur et exécutez :
+Suppression des bloatwares : Xbox, Skype, OneDrive, 3DBuilder, etc.
 
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+Application de quelques bonnes pratiques ANSSI/CIS (logging, politique de mot de passe, etc.)
+
+📁 Log & Audit
+
+Deux fichiers .txt sont générés pour suivre toutes les actions exécutées
+
+Aucun redémarrage automatique n’est forcé
+
+▶️ Exécution
+
+Méthode 1 : Lancement automatique
+launch_script.bat
+📌 Fichier à exécuter en tant qu’administrateur (clic droit > Exécuter en tant qu’administrateur).
+
+Méthode 2 : Exécution manuelle
+
+Set-ExecutionPolicy Bypass -Scope Process -Force
 .\Windows11_PostInstall_Hardening_v2.ps1
 
-Consultation des logs : Deux fichiers de log seront créés sur votre bureau pour le suivi des opérations effectuées :
+📌 Remarques
 
-PostInstallationLog.txt
+Ce script n’est pas signé. Il est conseillé de le lire avant exécution.
 
-resultat_final.txt
+Il ne modifie pas de paramètres critiques ou risqués, mais mieux vaut le tester sur une VM avant tout déploiement en production.
 
-Remarques Importantes
+Toutes les actions sont réversibles manuellement.
 
-Ce script est minimaliste et destiné principalement à une audience cherchant une solution rapide d'optimisation et de sécurisation de base.
+🙌 Contributions
 
-Il n'est pas exhaustif : des configurations supplémentaires peuvent être nécessaires selon votre environnement.
+Les pull requests sont les bienvenues !
+Si vous souhaitez proposer une amélioration ou adapter ce script à d'autres environnements (pro, éducation, etc.), n'hésitez pas.
 
-Testez toujours ce type de script sur un poste de test avant de l'utiliser en production.
+📜 Licence
 
-Auteur
+MIT — Utilisation libre et modification autorisée.
 
-Mous
+👤 Auteur
 
-Licence
+https://github.com/jamelchoulo75
 
-Ce script est distribué librement. Vous êtes libre de l'utiliser, le modifier et le redistribuer, tout en respectant les bonnes pratiques de créditation.+
+Merci à tous pour vos retours et votre enthousiasme !
+
