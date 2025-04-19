@@ -1,0 +1,3 @@
+@echo off
+powershell -ExecutionPolicy Bypass -File "C:\Path\To\Your\PowerShellScript.ps1"
+pause
