@@ -1,8 +1,11 @@
 # Windows11_PostInstall_Hardening
-Windows11_PostInstall_Hardening
+
 Post-Installation Hardening Script for Windows 11
+
 Version: 1.0
+
 Created by: Mous
+
 Overview:
 This script will perform various post-installation hardening tasks on Windows 11, including optimization, driver installation, cleanup, hardening, and security configurations. It also disables unnecessary services and applications, as well as applies hardening settings recommended by CIS and ANSSI benchmarks.
 Instructions:
